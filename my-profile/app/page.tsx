@@ -1,8 +1,16 @@
+"use client";
+
 import Image from "next/image";
 import rony from "../public/profile.jpg"
+import { Mind } from "./Components/Mind";
+import { About } from "./Components/About";
 import ReadMoreArea from "@foxeian/react-read-more";
 import { Edu_SA_Beginner, Montserrat  } from "next/font/google";
+import { useState } from "react";
 
+interface toggle {
+  toggleitem: 'mind' | 'about';
+}
 
 const buttonStyle = {
   color: "blue",
@@ -20,9 +28,12 @@ const montserrat = Montserrat({
 });
 
 export default function Home() {
+  const [toggle, setToggle] = useState<string>('mind');
+
   const bio = "Ami Akta Jinda Las, katis na re jonlas bas";
   const name = "Mahfuj Alam Rony";
-  const details = "The OPPO A12 is a budget-friendly smartphone featuring a 6.22-inch HD+ display, a MediaTek Helio P35 processor, and a 4230mAh battery. It includes a dual rear camera (13MP + 2MP) and a 5MP front camera, along with security features like a rear-mounted fingerprint sensor and AI face unlock. Available in Black and Blue, it runs on Android 9 with ColorOS 6.1 and offer     expand";
+  // const details = "একটা সময় ছিল, যখন আমার কোনো অস্তিত্বই ছিল না। তারপর একসময় পৃথিবীতে আমার আগমন হলো, এখন আমি আছি—শ্বাস নেই, বাঁচি, অনুভব করি। আবার একদিন এমন সময়ও আসবে, যখন আমি ছিলাম—এ কথা কেউই মনে রাখবে না। জীবন ঠিক এমনই একটি ক্ষণস্থায়ী যাত্রা। আমি শুধু চাই, আমার কারণে যেন কারও মনে কোনো কষ্ট না থাকে।";
+  const details = "";
   return (
     <div>
       <header className="border border-blue-700 m-2 rounded-2xl">
@@ -32,7 +43,7 @@ export default function Home() {
           />
           <h1 className={` ${eduFont.className} text-2xl mt-5`}>{name}</h1>
 
-          <p className={`${montserrat.className} mt-3`}>{bio}</p>
+          <p className={`${montserrat.className} mt-7`}>{bio}</p>
 
           <ReadMoreArea
               className={` ${montserrat.className} flex flex-col mt-10 px-6`} 
@@ -50,6 +61,33 @@ export default function Home() {
           </ReadMoreArea>
         </div>
       </header>
+
+      <body>
+        <div className="mt-10 items-center flex px-4 gap-3">
+            <a
+              className={`px-5 py-2.5 font-medium bg-blue-50 hover:bg-blue-100 hover:text-blue-600 text-blue-500 rounded-lg text-sm 
+                ${toggle === "mind" ? "border border-blue-500" : ""}`}
+
+                onClick={() => setToggle('mind')}
+            >
+              Mind
+            </a>
+
+            <a
+              className={`px-5 py-2.5 font-medium bg-blue-50 hover:bg-blue-100 hover:text-blue-600 text-blue-500 rounded-lg text-sm 
+                ${toggle === "about" ? "border border-blue-500" : ""}`}
+                onClick={() => setToggle('about')}
+            >
+              About
+            </a>
+
+
+        </div>
+
+        <div className="px-4 mt-8">
+          {toggle === 'mind' ? <Mind /> : <About />}
+        </div>
+      </body>
     </div>
   );
 }
