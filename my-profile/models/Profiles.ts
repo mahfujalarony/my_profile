@@ -3,4 +3,5 @@ export interface Profile {
   bio: string;
   profileimage?: string;
   view?: number;
+  blobName?: string;
 }

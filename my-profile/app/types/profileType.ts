@@ -1,9 +1,9 @@
-// types/profileType.ts
 export interface Profile {
   name?: string;
   bio: string;
   profileimage?: string;
   view?: number;
+  blobName?: string;
 }
 
 export interface ProfileBak {
@@ -12,4 +12,5 @@ export interface ProfileBak {
   bio: string;
   profileimage?: string;
   view?: number;
+  blobName?: string;
 }

@@ -7,6 +7,7 @@ const ProfileSchema = new mongoose.Schema({
   name: { type: String, default: null },
   bio: { type: String, required: true },
   profileimage: { type: String, default: null },
+  blobName: { type: String, default: null },
   view: { type: Number, default: 0 },
 });
 
@@ -25,12 +26,12 @@ export async function GET() {
   }
 }
 
-// POST - Create new profile
+
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
     const body = await req.json();
-    const { name, bio, profileimage } = body;
+    const { name, bio, profileimage, blobName } = body;
 
     console.log("POST - Creating new profile:", { name, bio, profileimage });
 
@@ -48,14 +49,14 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// PUT - Update existing profile
+
 export async function PUT(req: NextRequest) {
   try {
     await connectDB();
     const body = await req.json();
-    const { id, name, bio, profileimage } = body;
+    const { id, name, bio, profileimage, blobName } = body;
 
-    console.log("PUT - Updating profile:", { id, name, bio, profileimage });
+    console.log("PUT - Updating profile:", { id, name, bio, profileimage, blobName });
 
     if (!id) {
       return NextResponse.json({ error: "ID required" }, { status: 400 });
@@ -63,7 +64,7 @@ export async function PUT(req: NextRequest) {
 
     const updatedProfile = await Profile.findByIdAndUpdate(
       id,
-      { $set: { name, bio, profileimage } },
+      { $set: { name, bio, profileimage, blobName } },
       { new: true }
     );
 

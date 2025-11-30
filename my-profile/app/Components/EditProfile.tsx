@@ -14,6 +14,7 @@ export const EditProfile = () => {
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [profileimage, setProfileimage] = useState("");
+  const [blobName, setBlobName] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -29,6 +30,7 @@ export const EditProfile = () => {
           setName(data.name || "");
           setBio(data.bio || "");
           setProfileimage(data.profileimage || "");
+          setBlobName(data.blobName || "");
         } else {
           setProfile(null);
         }
@@ -74,6 +76,7 @@ export const EditProfile = () => {
 
       if (res.ok) {
         setProfileimage(data.url);
+        setBlobName(data.blobName);
         setMessage("Image uploaded successfully!");
       } else {
         setMessage(`Upload failed: ${data.message || data.error}`);
@@ -96,8 +99,8 @@ export const EditProfile = () => {
       const method = profile ? "PUT" : "POST";
       
       const bodyData = profile 
-        ? { id: profile._id, name, bio, profileimage }
-        : { name, bio, profileimage };
+        ? { id: profile._id, name, bio, profileimage, blobName }
+        : { name, bio, profileimage, blobName };
 
       const res = await fetch("/api/editprofile", {
         method: method,
@@ -122,6 +125,29 @@ export const EditProfile = () => {
       setSaving(false);
     }
   };
+
+const handleRemoveImage = async () => {
+  try {
+    if (blobName) {
+      const res = await fetch("/api/upload", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ blobName: blobName }),
+      });
+
+      if (! res.ok) {
+        console.error("Failed to delete from Azure");
+      }
+    }
+    setProfileimage("");
+    setBlobName("");
+    setMessage("Image removed successfully!");
+
+  } catch (error) {
+    console.error("Error removing image:", error);
+    setMessage("Failed to remove image");
+  }
+};
 
   if (loading) return <Loader />;
 
@@ -172,7 +198,7 @@ export const EditProfile = () => {
                   type="button"
                   variant="outline"
                   className="text-red-500 border-red-500 hover:bg-red-50"
-                  onClick={() => setProfileimage("")}
+                  onClick={handleRemoveImage}
                 >
                   Remove Image
                 </Button>

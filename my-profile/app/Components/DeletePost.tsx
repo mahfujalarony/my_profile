@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { postData } from "../types/postType";
 import { timeAgo } from "../utils/timeAgo";
 import {
@@ -12,6 +12,50 @@ import {
 import Loader from "./ui/loader";
 import { Button } from "@/components/ui/button";
 
+const VideoPlayer = ({ src }: { src: string }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (! video) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry. isIntersecting) {
+            video.play(). catch(() => {});
+          } else {
+       
+            video.pause();
+          }
+        });
+      },
+      {
+        threshold: 0.5, 
+      }
+    );
+
+    observer.observe(video);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  return (
+    <video
+      ref={videoRef}
+      src={src}
+      className="w-full h-auto max-h-[70vh] object-contain"
+      muted
+      controls
+      loop
+      playsInline
+      preload="metadata"
+    />
+  );
+};
+
 export const DeletePost = () => {
   const [mind, setMind] = useState<postData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -21,8 +65,8 @@ export const DeletePost = () => {
     const fetchPost = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/posts?sortBy=${sortBy}`);
-        const data = await res.json();
+        const res = await fetch(`/api/posts? sortBy=${sortBy}`);
+        const data = await res. json();
         console.log("data", data);
         setMind(data);
       } catch (error) {
@@ -46,7 +90,7 @@ export const DeletePost = () => {
         console.log("Post deleted successfully");
       } else {
         const errorData = await res.json();
-        console.error("Delete failed:", errorData.error);
+        console.error("Delete failed:", errorData. error);
       }
     } catch (error) {
       console.error("Error deleting post:", error);
@@ -75,17 +119,23 @@ export const DeletePost = () => {
         >
           <div className="flex justify-between">
             <p className="text-gray-500 text-sm">
-              {new Date(item.date).toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              })}{" "}
-              {new Date(item.date).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+            
+              {item.date
+                ? new Date(item.date).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })
+                : "No date"}{" "}
+              {item.date
+                ? new Date(item.date).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                : ""}
             </p>
-            <p>{timeAgo(new Date(item.date))}</p>
+         
+            <p>{item.date ? timeAgo(new Date(item. date)) : ""}</p>
           </div>
 
           <h2 className="text-xl font-semibold mt-5">{item.title}</h2>
@@ -94,12 +144,19 @@ export const DeletePost = () => {
           {item.image && (
             <img
               src={item.image}
-              alt={item.title}
+              alt={item.title || "Post image"}  
               className="w-full h-auto object-cover rounded mt-2"
             />
           )}
-          
-          
+
+           {item.video && (
+                <div className="px-3 pb-3 sm:px-4 sm:pb-4">
+                  <div className="rounded-xl sm:rounded-2xl overflow-hidden bg-black">
+                    <VideoPlayer src={item.video} />
+                  </div>
+                </div>
+              )}
+
           <Button
             variant="outline"
             className="w-full mt-5 bg-red-400 cursor-pointer hover:bg-red-500"

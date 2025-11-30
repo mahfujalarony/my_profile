@@ -20,8 +20,8 @@ export async function POST(req: NextRequest) {
     req.headers.get("x-real-ip") ||
     "unknown";
 
-  const body = await req.json().catch(() => ({}));
 
+  const body = await req.json().catch(() => ({}));
 
   const isVisited = await VisitorModel.findOne({ ip });
 
@@ -63,3 +63,4 @@ export async function GET() {
 
   return NextResponse.json({ total, lastVisitors });
 }
+

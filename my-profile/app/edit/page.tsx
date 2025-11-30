@@ -94,13 +94,13 @@ const Edit = () => {
 
   // Authenticated - Main content
   return (
-    <div className="p-4 w-full lg:w-xl mx-auto">
+    <div className="p-4 w-full  mx-auto">
       {/* Logout Button */}
       <div className="flex  mb-4">
         <Button
           onClick={handleLogout}
           variant="outline"
-          className="text-red-500"
+          className="text-red-500 cursor-pointer"
         >
           Logout
         </Button>
@@ -108,13 +108,16 @@ const Edit = () => {
 
       {/* Tabs */}
       <div className="flex w-full  flex-col gap-6">
-        <Tabs defaultValue="create">
+        <Tabs defaultValue="visitors">
           <TabsList>
-            <TabsTrigger value="create">Create</TabsTrigger>
-            <TabsTrigger value="edit">Edit Profile</TabsTrigger>
-            <TabsTrigger value="delete">Delete</TabsTrigger>
-            <TabsTrigger value="visitors">Visitiors</TabsTrigger>
+            <TabsTrigger value="visitors" className="cursor-pointer">Visitiors</TabsTrigger>
+            <TabsTrigger value="create" className="cursor-pointer">Create</TabsTrigger>
+            <TabsTrigger value="edit" className="cursor-pointer">Edit Profile</TabsTrigger>
+            <TabsTrigger value="delete" className="cursor-pointer">Delete</TabsTrigger>
           </TabsList>
+          <TabsContent value="visitors">
+            <Visitors />
+          </TabsContent>
           <TabsContent value="create">
             <AddPost />
           </TabsContent>
@@ -126,9 +129,6 @@ const Edit = () => {
             <DeletePost />
           </TabsContent>
 
-          <TabsContent value="visitors">
-            <Visitors />
-          </TabsContent>
         </Tabs>
       </div>
     </div>
